@@ -9,7 +9,6 @@ const Routess = () => (
         <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/repository" element={<Repository />} />
-            {/*LEMBRETE: ADICIONAR ROTA DASH RELOAD*/}
         </Routes>
     </BrowserRouter>
 
