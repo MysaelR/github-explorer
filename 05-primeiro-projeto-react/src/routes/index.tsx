@@ -8,11 +8,9 @@ const Routess = () => (
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/repository" element={<Repository />} />
+            <Route path="/repositories/:repository/:repository" element={<Repository />} />
         </Routes>
     </BrowserRouter>
-
-
 );
 
 export default Routess;
