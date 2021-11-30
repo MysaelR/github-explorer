@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { Form, Title, Repositories, Error } from './styles';
 import api from '../../services/api';
 import logoImg from '../../assets/logo.svg';
@@ -15,13 +15,31 @@ interface Repository {
 }
 
 const Dashboard: React.FC = () => {
-
+    //const list = ['1', '2', '3'];
     const [newRepo, setNewRepo] = useState('');
     const [inputError, setInputError] = useState('');
-    const [repositories, setRepositories] = useState<Repository[]>([]);
+    //const [repositories, setRepositories] = useState<Repository[]>([]);
+    const [repositories, setRepositories] = useState<Repository[]>(() => {
+        const storagedRepositories = localStorage.getItem('@GithubExplorer:repositories');
+        console.log(storagedRepositories);
+        if (storagedRepositories) {
+            return JSON.parse(storagedRepositories);
+        }
+        return [];
+
+    });
+
+    useEffect(() => { //salvar registros novos no LocalStorage, e como não aceita array, foi usado o JSON.stringfy para converter o array
+        localStorage.setItem('@GithubExplorer:repositories', JSON.stringify(repositories));
+    }, [repositories]);
+
+    /*useEffect(() => {
+        localStorage.setItem('@keytest', JSON.stringify(list));
+    }, [repositories]);*/
 
 
-    async function handleAddRepository(event: FormEvent<HTMLFormElement>) { //FormEvent = evento do formulário. o html por padrão tenta redirecionar de página quando submete um
+
+    async function handleAddRepository(event: FormEvent<HTMLFormElement>) {//FormEvent = evento do formulário. o html por padrão tenta redirecionar de página quando submete um
         //formulário. o htmlformelement representa o elemento html do form, 
         event.preventDefault();
         if (!newRepo) { //caso não seja digitado nada no campo
@@ -32,7 +50,6 @@ const Dashboard: React.FC = () => {
             const response = await api.get<Repository>(`repos/${newRepo}`);
 
             const repository = response.data;
-
 
             setRepositories([...repositories, repository]);
             setNewRepo('');
